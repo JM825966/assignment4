@@ -83,14 +83,14 @@ cat $PUBKEY >> $SSHDIR/authorized_keys
 chmod 600 $SSHDIR/authorized_keys
 
 
-CUSTOM_USER=QD899836
-CUSTOM_SSHDIR=/users/QD899836/.ssh
+CUSTOM_USER=J825966
+CUSTOM_SSHDIR=/users/J825966/.ssh
 CUSTOM_GROUP=`id -gn ${CUSTOM_USER}`
 
 cp $PRIVKEY ${CUSTOM_SSHDIR}
 cp $PUBKEY ${CUSTOM_SSHDIR}
 cat $PUBKEY >> ${CUSTOM_SSHDIR}/authorized_keys
 chown -R ${CUSTOM_USER}:${CUSTOM_GROUP} ${CUSTOM_SSHDIR}
-su QD899836 -c 'echo "StrictHostKeyChecking no" > ${CUSTOM_SSHDIR}/config'
+su J825966 -c 'echo "StrictHostKeyChecking no" > ${CUSTOM_SSHDIR}/config'
 
 exit 0
