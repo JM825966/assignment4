@@ -32,6 +32,7 @@ tour = IG.Tour()
 tour.Description(IG.Tour.TEXT,tourDescription)
 request.addTour(tour)
 
+prefixForIP = "192.168.1."
 
 link = request.LAN("lan") 
 
@@ -39,6 +40,15 @@ for i in range(6):
   if i == 0:
     node = request.XenVM("head")
     node.routable_control_ip = "true"
+    node.addService(pg.Execute(shell="sh", command="sudo yum -y install nfs-utils"))
+    node.addService(pg.execute(shell="sh", command="sudo mkdir -m 755 /software"))
+    node.addService(pg.Execute(shell="sh", command="sudo mkdir /scratch"))
+    #this is used to enable and then start the nfs services
+    node.addService(pg.Execute(shell="sh", command="sudo systemct1 enable nfs-server.service"))
+    node.addService(pg.Execute(shell="sh", command="sudo systemct1 start nfs-server.service")
+      
+    node.addService(pg.Execute(shell="sh", command="sudo chmod 755 /local/repository/install_mpi.sh"))
+    node.addService(pg.Execute(shell="sh", command="sudo /local/repository/install_mpi.sh"))
   elif i == 1:
     node = request.XenVM("metadata")
   elif i == 2:
@@ -47,6 +57,10 @@ for i in range(6):
     node = request.XenVM("compute-" + str(i-2))
     node.cores = 2
     node.ram = 4096
+      
+      
+    node.addService(pg.Execute(shell="sh", command="sudo chmod 755 /local/repository/passwordless.sh"))
+    node.addService(pg.Execute(shell="sh", command="sudo /local/repository/passwordless.sh"))
     
   node.disk_image = "urn:publicid:IDN+emulab.net+image+emulab-ops:CENTOS7-64-STD"
   
@@ -55,10 +69,7 @@ for i in range(6):
   iface.addAddress(pg.IPv4Address("192.168.1." + str(i + 1), "255.255.255.0"))
   link.addInterface(iface)
   
-  node.addService(pg.Execute(shell="sh", command="sudo chmod 755 /local/repository/passwordless.sh"))
-  node.addService(pg.Execute(shell="sh", command="sudo /local/repository/passwordless.sh"))
-  node.addService(pg.Execute(shell="sh", command="sudo chmod 755 /local/repository/install_mpi.sh"))
-  node.addService(pg.Execute(shell="sh", command="sudo /local/repository/install_mpi.sh"))
+  
   
   node.addService(pg.Execute(shell="sh", command="sudo su J825966 -c 'cp /local/repository/source/* /users/J825966'"))
   
